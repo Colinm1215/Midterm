@@ -23,23 +23,22 @@ public class ATM implements ATMInterface {
         return "";
     }
 
-    @Override
-    public String searchForAccount(String login) {
+    // Private helper functions for searchAccount logic
+    private String searchForAccount(String login) {
+        return "";
+    }
+
+    private String searchForAccount(int number) {
         return "";
     }
 
     @Override
-    public String searchForAccount(int number) {
+    public String searchForAccount() {
         return "";
     }
 
     @Override
-    public String updateAccount(int number) {
-        return "";
-    }
-
-    @Override
-    public String depositAccount(int number) {
+    public String updateAccount() {
         return "";
     }
 
@@ -49,32 +48,17 @@ public class ATM implements ATMInterface {
     }
 
     @Override
-    public String displayBalance() {
+    public String deleteAccount() {
         return "";
     }
 
     @Override
-    public String depositCash(int amount) {
-        return "";
-    }
-
-    @Override
-    public String withdrawCash(int amount) {
-        return "";
-    }
-
-    @Override
-    public boolean validateLogin(String username, int pin) {
+    public boolean loginMenu() {
         return false;
     }
 
     @Override
-    public boolean isAdmin() {
-        return false;
-    }
-
-    @Override
-    public void updateAccountMenu() {
+    public void customerMenu() {
 
     }
 
@@ -84,12 +68,28 @@ public class ATM implements ATMInterface {
     }
 
     @Override
-    public void customerMenu() {
+    public boolean isAdmin() {
+        return false;
     }
 
     @Override
-    public boolean loginMenu() {
+    public boolean validateLogin(String username, int pin) {
         return false;
+    }
+
+    @Override
+    public String withdrawCash(int amount) {
+        return "";
+    }
+
+    @Override
+    public String depositCash(int amount) {
+        return "";
+    }
+
+    @Override
+    public String displayBalance() {
+        return "";
     }
 
     public static void main(String[] args) {

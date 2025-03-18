@@ -6,7 +6,6 @@ public interface ATMInterface {
     boolean loginMenu();
     void customerMenu();
     void adminMenu();
-    void updateAccountMenu();
 
     // Validation Functions
     boolean isAdmin();
@@ -19,12 +18,11 @@ public interface ATMInterface {
 
     // Admin Functionality
     String createAccount(String login, int pin, String name, int balance, String status);
-    String depositAccount(int number);
-    String updateAccount(int number);
-    String searchForAccount(int number);
+    String deleteAccount();
+    String updateAccount();
+    String searchForAccount();
 
     // Not in the requirements but added for my own ease of use
-    String searchForAccount(String login);
     String listAccounts();
 
 }
