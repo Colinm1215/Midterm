@@ -19,7 +19,7 @@ public class ATMDatabase implements ATMDatabaseInterface {
     }
 
     @Override
-    public void addUser(User user) throws SQLException {
+    public int addUser(User user) throws SQLException {
         String query = "INSERT INTO users (login, pin, role) VALUES (?, ?, ?)";
         List<Object> params = new ArrayList<>();
         params.add(user.getLogin());
@@ -34,6 +34,7 @@ public class ATMDatabase implements ATMDatabaseInterface {
         params.add(user.getAccountName());
         params.add(user.getAccountStatus());
         updateDB(query, params);
+        return newUser;
     }
 
     @Override
@@ -89,15 +90,6 @@ public class ATMDatabase implements ATMDatabaseInterface {
         List<User> users = dbGetUsers(query, params);
 
         return users.isEmpty() ? null : users.getFirst();
-    }
-
-    @Override
-    public List<User> getAllUsers() throws SQLException {
-        String query = "SELECT * FROM users";
-        List<Object> params = new ArrayList<>();
-        List<User> users = dbGetUsers(query, params);
-
-        return users.isEmpty() ? null : users;
     }
 
     private List<User> dbGetUsers(String query, List<Object> params) throws SQLException {

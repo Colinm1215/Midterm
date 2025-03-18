@@ -40,11 +40,6 @@ public class ATM implements ATMInterface {
     }
 
     @Override
-    public String listAccounts() {
-        return "";
-    }
-
-    @Override
     public String getInput(String prompt) {
         System.out.print(prompt);
         return scanner.nextLine();
@@ -56,24 +51,129 @@ public class ATM implements ATMInterface {
     }
 
     @Override
-    public String searchForAccount() {
-        return "";
+    public String searchForAccount() throws SQLException {
+        String input = getInput("Enter account number: ");
+        try {
+            int processed = Integer.parseInt(input);
+            User user = this.database.getUser(processed);
+            if (user != null) {
+                return String.format("""
+                        The account information is:
+                        Account # %d
+                        Holder: %s
+                        Balance: %d
+                        Status: %s
+                        Login: %s
+                        Pin Code: %s
+                        """,
+                        user.getAccountID(),
+                        user.getAccountName(),
+                        user.getAccountBalance(),
+                        user.getAccountStatus(),
+                        user.getLogin(),
+                        user.getPin());
+            }
+            return """
+                        Account could not be found!
+                        """;
+        } catch (NumberFormatException e) {
+            return "Invalid input entered!";
+        }
     }
 
     @Override
-    public String updateAccount() {
-        return "";
+    public String updateAccount() throws SQLException {
+        String input = getInput("Enter account number: ");
+        try {
+            int processed = Integer.parseInt(input);
+            User user = this.database.getUser(processed);
+            if (user != null) {
+                atmDisplay("""
+                        Current Account Details
+                        Account # %d
+                        Holder: %s
+                        Balance: %d
+                        Status: %s
+                        Login: %s
+                        Pin Code: %s
+                        """.formatted(user.getId(),
+                        user.getAccountName(),
+                        user.getAccountBalance(),
+                        user.getAccountStatus(),
+                        user.getLogin(),
+                        user.getPin()));
+                input = getInput("Enter new Login (or press Enter to keep current): ");
+                if (!input.isEmpty()) {
+                    user.setLogin(input);
+                }
+                input = getInput("Enter new Pin (or press Enter to keep current): ");
+                if (!input.isEmpty()) {
+                    user.setPin(input);
+                }
+                input = getInput("Enter new Account Status (or press Enter to keep current): ");
+                if (!input.isEmpty()) {
+                    user.setAccountStatus(input);
+                }
+                input = getInput("Enter new Account Holder (or press Enter to keep current): ");
+                if (!input.isEmpty()) {
+                    user.setAccountName(input);
+                }
+                this.database.updateUser(user);
+                return "User Account Successfully Updated!";
+            }
+            return "User Account could not be found!";
+        } catch (NumberFormatException e) {
+            return "Invalid input entered!";
+        }
     }
 
     @Override
-    public String createAccount() {
-         // String login, int pin, String name, int balance, String status
-        return "";
+    public String createAccount() throws SQLException {
+        atmDisplay("Creating account...");
+        String login = getInput("Enter login: ");
+        String pin = getInput("Enter pin: ");
+        if (!pin.matches("\\d{5}")) return "Invalid pin!";
+        String name = getInput("Enter account name: ");
+        String balance = getInput("Enter balance: ");
+        try {
+            int processed = Integer.parseInt(balance);
+            String status = getInput("Enter account status: ");
+            if (status.equals("Active") || status.equals("Disabled")) {
+                User newUser = new User(-1, login, pin, "customer", new Account(-1, processed, status, name));
+                int id = this.database.addUser(newUser);
+                return "Account Successfully Created – the account number assigned is: %d".formatted(id);
+            }
+            return "Invalid Status";
+        } catch (NumberFormatException e) {
+            return "Invalid balance input entered!";
+        }
     }
 
     @Override
-    public String deleteAccount() {
-        return "";
+    public String deleteAccount() throws SQLException {
+        String input = getInput("Enter the account number to which you want to delete: ");
+        try {
+            int processed = Integer.parseInt(input);
+            User user = this.database.getUser(processed);
+            if (user != null) {
+                input = getInput(String.format(
+                        "You wish to delete the account held by %s. If this information is correct, please re-enter the account number: ", user.getAccountName()));
+                try {
+                    int processed_new = Integer.parseInt(input);
+                    if (processed_new == processed) {
+                        this.database.deleteAccount(processed);
+                        return "Account Deleted Successfully";
+                    }
+                } catch (NumberFormatException e) {
+                    return "Invalid input entered!";
+                }
+            } else {
+                return "User not found!";
+            }
+        } catch (NumberFormatException e) {
+            return "Invalid input entered!";
+        }
+        return "Invalid input entered!";
     }
 
     @Override
@@ -154,15 +254,26 @@ public class ATM implements ATMInterface {
             String input = getInput("Enter your choice: ");
             switch (input) {
                 case "1":
-                    withdrawCash();
+                    atmDisplay(createAccount());
+                    getInput("Press enter to continue...");
+                    atmDisplay("\n\n");
                     break;
                 case "2":
-                    depositCash();
+                    atmDisplay(deleteAccount());
+                    getInput("Press enter to continue...");
+                    atmDisplay("\n\n");
                     break;
                 case "3":
-                    displayBalance();
+                    atmDisplay(updateAccount());
+                    getInput("Press enter to continue...");
+                    atmDisplay("\n\n");
                     break;
                 case "4":
+                    atmDisplay(searchForAccount());
+                    getInput("Press enter to continue...");
+                    atmDisplay("\n\n");
+                    break;
+                case "5":
                     loop = false;
                     break;
             }

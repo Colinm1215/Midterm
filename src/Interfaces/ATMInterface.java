@@ -24,13 +24,12 @@ public interface ATMInterface {
     String displayBalance() throws SQLException;
 
     // Admin Functionality
-    String createAccount();
-    String deleteAccount();
-    String updateAccount();
-    String searchForAccount();
+    String createAccount() throws SQLException;
+    String deleteAccount() throws SQLException;
+    String updateAccount() throws SQLException;
+    String searchForAccount() throws SQLException;
 
     // Not in the requirements but added for my own ease of use
-    String listAccounts();
     String getInput(String prompt);
     void atmDisplay(String output);
 }
