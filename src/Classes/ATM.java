@@ -1,25 +1,39 @@
+package Classes;
+
+import Interfaces.ATMInterface;
+
 public class ATM implements ATMInterface {
-    private ConfigInterface CONFIG;
-    private boolean isAdmin = false;
-
-
-    public ATM() {
-        CONFIG = new ATMConfig();
-    }
+    private boolean admin = false;
 
     @Override
     public void start() {
         if (this.loginMenu()) {
-            if (this.isAdmin) {
+            if (this.admin) {
                 this.adminMenu();
             } else {
                 this.customerMenu();
             }
         }
+        this.end();
+    }
+
+    @Override
+    public void end() {
+
     }
 
     @Override
     public String listAccounts() {
+        return "";
+    }
+
+    @Override
+    public String getInput(String prompt) {
+        return "";
+    }
+
+    @Override
+    public String atmDisplay(String output) {
         return "";
     }
 
@@ -54,12 +68,15 @@ public class ATM implements ATMInterface {
 
     @Override
     public boolean loginMenu() {
-        return false;
+        String username = getInput("Enter login: ");
+        String pin = getInput("Enter pin: ");
+        // validate logins
+        // admin logic
+        return true;
     }
 
     @Override
     public void customerMenu() {
-
     }
 
     @Override
@@ -93,7 +110,7 @@ public class ATM implements ATMInterface {
     }
 
     public static void main(String[] args) {
-        System.out.println("Welcome to the ATM");
+        System.out.println("Welcome to the Classes.ATM");
         ATM ATM = new ATM();
         ATM.start();
     }

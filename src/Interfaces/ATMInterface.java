@@ -1,6 +1,11 @@
+package Interfaces;
+
 public interface ATMInterface {
     // Startpoint
     void start();
+
+    // Endpoint
+    void end();
 
     // Menu Functions
     boolean loginMenu();
@@ -24,5 +29,6 @@ public interface ATMInterface {
 
     // Not in the requirements but added for my own ease of use
     String listAccounts();
-
+    String getInput(String prompt);
+    String atmDisplay(String output);
 }
