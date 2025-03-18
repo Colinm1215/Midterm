@@ -1,6 +1,9 @@
 public interface ATMInterface {
+    // Startpoint
+    void start();
+
     // Menu Functions
-    void loginMenu();
+    boolean loginMenu();
     void customerMenu();
     void adminMenu();
     void updateAccountMenu();

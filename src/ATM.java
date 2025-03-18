@@ -1,8 +1,21 @@
 public class ATM implements ATMInterface {
     private ConfigInterface CONFIG;
+    private boolean isAdmin = false;
+
 
     public ATM() {
         CONFIG = new ATMConfig();
+    }
+
+    @Override
+    public void start() {
+        if (this.loginMenu()) {
+            if (this.isAdmin) {
+                this.adminMenu();
+            } else {
+                this.customerMenu();
+            }
+        }
     }
 
     @Override
@@ -72,17 +85,17 @@ public class ATM implements ATMInterface {
 
     @Override
     public void customerMenu() {
-
     }
 
     @Override
-    public void loginMenu() {
-
+    public boolean loginMenu() {
+        return false;
     }
 
     public static void main(String[] args) {
-        System.out.println("Welcome to ATM System");
+        System.out.println("Welcome to the ATM");
         ATM ATM = new ATM();
+        ATM.start();
     }
 
 }
