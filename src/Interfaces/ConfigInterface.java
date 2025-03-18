@@ -2,7 +2,6 @@ package Interfaces;
 
 import java.util.Scanner;
 public interface ConfigInterface {
-    Scanner getScanner();
 
     String getDB_URL();
 

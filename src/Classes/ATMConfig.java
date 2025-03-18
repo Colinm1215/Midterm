@@ -9,7 +9,6 @@ import java.util.Scanner;
 public class ATMConfig implements ConfigInterface {
     private static final String CONFIG_FILE = "config.properties";
     private static final Properties props = new Properties();
-    private static final Scanner scanner = new Scanner(System.in);
 
     static {
         try (InputStream input = ATMConfig.class.getClassLoader().getResourceAsStream(CONFIG_FILE)) {
@@ -21,11 +20,6 @@ public class ATMConfig implements ConfigInterface {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    @Override
-    public Scanner getScanner() {
-        return scanner;
     }
 
     @Override

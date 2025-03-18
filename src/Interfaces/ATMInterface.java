@@ -14,15 +14,15 @@ public interface ATMInterface {
 
     // Validation Functions
     boolean isAdmin();
-    boolean validateLogin(String username, int pin);
+    boolean validateLogin(String username, String pin);
 
     // Customer Functionality
-    String withdrawCash(int amount);
-    String depositCash(int amount);
+    String withdrawCash();
+    String depositCash();
     String displayBalance();
 
     // Admin Functionality
-    String createAccount(String login, int pin, String name, int balance, String status);
+    String createAccount();
     String deleteAccount();
     String updateAccount();
     String searchForAccount();
@@ -30,5 +30,5 @@ public interface ATMInterface {
     // Not in the requirements but added for my own ease of use
     String listAccounts();
     String getInput(String prompt);
-    String atmDisplay(String output);
+    void atmDisplay(String output);
 }

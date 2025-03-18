@@ -43,11 +43,11 @@ public class Account implements AccountInterface {
 
     @Override
     public String getAccountName() {
-        return "";
+        return this.name;
     }
 
     @Override
     public void setAccountName(String accountName) {
-
+        this.name = accountName;
     }
 }

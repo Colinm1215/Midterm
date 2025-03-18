@@ -20,76 +20,76 @@ public class User implements UserInterface {
 
     @Override
     public int getId() {
-        return 0;
+        return this.id;
     }
 
     @Override
     public String getLogin() {
-        return "";
+        return this.login;
     }
 
     @Override
     public void setLogin(String login) {
-
+        this.login = login;
     }
 
     @Override
     public String getPin() {
-        return "";
+        return this.pin;
     }
 
     @Override
     public void setPin(String pin) {
-
+        this.pin = pin;
     }
 
     @Override
     public void setAccountBalance(int balance) {
-
+        this.account.setAccountBalance(balance);
     }
 
     @Override
     public void setAccountRole(String role) {
-
+        this.role = role;
     }
 
     @Override
     public int getAccountBalance() {
-        return 0;
+        return this.account.getAccountBalance();
     }
 
     @Override
     public int getAccountRole() {
-        return 0;
+        return this.account.getAccountBalance();
     }
 
     @Override
     public String getRole() {
-        return "";
+        return this.role;
     }
 
     @Override
     public void setRole(String role) {
-
+        this.role = role;
     }
 
     @Override
     public String getAccountName() {
-        return "";
+        return this.account.getAccountName();
     }
 
     @Override
     public void setAccountName(String accountName) {
-
+        this.account.setAccountName(accountName);
     }
 
     @Override
     public String getAccountStatus() {
-        return "";
+        return this.account.getAccountStatus();
     }
 
     @Override
     public void setAccountStatus(String accountStatus) {
-
+        this.account.setAccountStatus(accountStatus);
     }
 }

@@ -76,7 +76,9 @@ public class ATMDatabase implements ATMDatabaseInterface {
 
     @Override
     public boolean isAdmin(int id) throws SQLException {
-        return (getUser(id).getRole().equals("ADMIN"));
+        User user = getUser(id);
+        if (user == null) return false;
+        return (user.getRole().equals("admin"));
     }
 
     @Override
