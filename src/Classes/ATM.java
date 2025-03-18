@@ -3,6 +3,9 @@ package Classes;
 import Interfaces.ATMDatabaseInterface;
 import Interfaces.ATMInterface;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class ATM implements ATMInterface {
@@ -10,6 +13,7 @@ public class ATM implements ATMInterface {
     private int user_id;
     private static final Scanner scanner = new Scanner(System.in);
     private ATMDatabaseInterface database;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     @Override
     public void start() {
@@ -25,11 +29,14 @@ public class ATM implements ATMInterface {
             this.end();
         } catch (Exception e) {
             atmDisplay(e.getMessage());
+            this.end();
         }
     }
 
     @Override
     public void end() {
+        atmDisplay("Thank you for using the ATM!");
+        System.exit(0);
     }
 
     @Override
@@ -94,7 +101,7 @@ public class ATM implements ATMInterface {
     }
 
     @Override
-    public void customerMenu() {
+    public void customerMenu() throws SQLException {
         boolean loop = true;
         String menu = """
                 ----------------- Customer Menu -----------------\n
@@ -109,13 +116,19 @@ public class ATM implements ATMInterface {
             String input = getInput("Enter your choice: ");
             switch (input) {
                 case "1":
-                    withdrawCash();
+                    atmDisplay(withdrawCash());
+                    getInput("Press enter to continue...");
+                    atmDisplay("\n\n");
                     break;
                 case "2":
-                    depositCash();
+                    atmDisplay(depositCash());
+                    getInput("Press enter to continue...");
+                    atmDisplay("\n\n");
                     break;
                 case "3":
-                    displayBalance();
+                    atmDisplay(displayBalance());
+                    getInput("Press enter to continue...");
+                    atmDisplay("\n\n");
                     break;
                 case "4":
                     loop = false;
@@ -125,7 +138,7 @@ public class ATM implements ATMInterface {
     }
 
     @Override
-    public void adminMenu() {
+    public void adminMenu() throws SQLException {
         boolean loop = true;
         String menu = """
                 ------------------ Admin Menu -------------------\n
@@ -179,18 +192,66 @@ public class ATM implements ATMInterface {
     }
 
     @Override
-    public String withdrawCash() {
-        return "";
+    public String withdrawCash() throws SQLException {
+        String amount = getInput("Enter the withdrawal amount: ");
+        LocalDate currentDate = LocalDate.now();
+        try {
+            int processedAmount = Integer.parseInt(amount);
+            User user = this.database.getUser(this.user_id);
+            if (processedAmount < 0) {
+                return "You cannot withdraw a negative amount!";
+            } else if (processedAmount > user.getAccountBalance()) {
+                return "You cannot withdraw more than " + user.getAccountBalance() + "!";
+            } else {
+                user.setAccountBalance(user.getAccountBalance() - processedAmount);
+                this.database.updateUser(user);
+                return String.format("""
+        Cash Successfully Withdrawn.
+        Account #%d
+        Date: %s
+        Withdrawn: %d
+        Balance: %d
+        """, user.getAccountID(), currentDate.format(formatter), processedAmount, user.getAccountBalance());
+            }
+        } catch (NumberFormatException e) {
+            return "Invalid input entered!";
+        }
     }
 
     @Override
-    public String depositCash() {
-        return "";
+    public String depositCash() throws SQLException {
+        String amount = getInput("Enter the deposit amount: ");
+        LocalDate currentDate = LocalDate.now();
+        try {
+            int processedAmount = Integer.parseInt(amount);
+            User user = this.database.getUser(this.user_id);
+            if (processedAmount < 0) {
+                return "You cannot deposit a negative amount!";
+            } else {
+                user.setAccountBalance(user.getAccountBalance() + processedAmount);
+                this.database.updateUser(user);
+                return String.format("""
+        Cash successfully deposited.
+        Account #%d
+        Date: %s
+        Deposited: %d
+        Balance: %d
+        """, user.getAccountID(), currentDate.format(formatter), processedAmount, user.getAccountBalance());
+            }
+        } catch (NumberFormatException e) {
+            return "Invalid input entered!";
+        }
     }
 
     @Override
-    public String displayBalance() {
-        return "";
+    public String displayBalance() throws SQLException {
+        User user = this.database.getUser(this.user_id);
+        LocalDate currentDate = LocalDate.now();
+        return String.format("""
+        \nAccount #%d
+        Date: %s
+        Balance: %d
+        """, user.getAccountID(), currentDate.format(formatter), user.getAccountBalance());
     }
 
     public static void main(String[] args) {

@@ -1,5 +1,7 @@
 package Interfaces;
 
+import java.sql.SQLException;
+
 public interface ATMInterface {
     // Startpoint
     void start();
@@ -9,17 +11,17 @@ public interface ATMInterface {
 
     // Menu Functions
     boolean loginMenu();
-    void customerMenu();
-    void adminMenu();
+    void customerMenu() throws SQLException;
+    void adminMenu() throws SQLException;
 
     // Validation Functions
     boolean isAdmin();
     boolean validateLogin(String username, String pin);
 
     // Customer Functionality
-    String withdrawCash();
-    String depositCash();
-    String displayBalance();
+    String withdrawCash() throws SQLException;
+    String depositCash() throws SQLException;
+    String displayBalance() throws SQLException;
 
     // Admin Functionality
     String createAccount();

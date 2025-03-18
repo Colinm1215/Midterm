@@ -31,4 +31,6 @@ public interface UserInterface {
     String getAccountStatus();
 
     void setAccountStatus(String accountStatus);
+
+    int getAccountID();
 }

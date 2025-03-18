@@ -92,4 +92,9 @@ public class User implements UserInterface {
     public void setAccountStatus(String accountStatus) {
         this.account.setAccountStatus(accountStatus);
     }
+
+    @Override
+    public int getAccountID() {
+        return this.account.getAccountId();
+    }
 }
