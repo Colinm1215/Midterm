@@ -1,4 +1,4 @@
-package Classes;
+package Classes.domain;
 
 import Interfaces.AccountInterface;
 import Interfaces.UserInterface;

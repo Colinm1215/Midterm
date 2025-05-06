@@ -1,5 +1,7 @@
-package Classes;
+package Classes.database;
 
+import Classes.domain.Account;
+import Classes.domain.User;
 import Interfaces.ATMDatabaseInterface;
 import Interfaces.AccountInterface;
 import Interfaces.ConfigInterface;

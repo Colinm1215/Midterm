@@ -1,10 +1,9 @@
-package Classes;
+package Config;
 
 import Interfaces.ConfigInterface;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.Scanner;
 
 public class ATMConfig implements ConfigInterface {
     private static final String CONFIG_FILE = "config.properties";

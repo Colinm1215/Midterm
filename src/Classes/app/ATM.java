@@ -1,5 +1,9 @@
-package Classes;
+package Classes.app;
 
+import Classes.domain.Account;
+import Classes.domain.User;
+import Classes.database.ATMDatabase;
+import Config.ATMConfig;
 import Interfaces.ATMDatabaseInterface;
 import Interfaces.ATMInterface;
 

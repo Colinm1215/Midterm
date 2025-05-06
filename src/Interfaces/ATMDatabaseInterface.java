@@ -1,9 +1,8 @@
 package Interfaces;
 
-import Classes.User;
+import Classes.domain.User;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public interface ATMDatabaseInterface {
     int addUser(User user) throws SQLException;
