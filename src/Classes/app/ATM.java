@@ -6,6 +6,7 @@ import Classes.database.ATMDatabase;
 import Config.ATMConfig;
 import Interfaces.ATMDatabaseInterface;
 import Interfaces.ATMInterface;
+import Interfaces.UserInterface;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -19,10 +20,18 @@ public class ATM implements ATMInterface {
     private ATMDatabaseInterface database;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
+    public ATM(ATMDatabaseInterface database) {
+        this.database = database;
+    }
+
+    public ATM() throws SQLException {
+        this(new ATMDatabase(new ATMConfig()));
+    }
+
+
     @Override
     public void start() {
         try {
-            this.database = new ATMDatabase(new ATMConfig());
             if (this.loginMenu()) {
                 if (this.admin) {
                     this.adminMenu();
@@ -59,7 +68,7 @@ public class ATM implements ATMInterface {
         String input = getInput("Enter account number: ");
         try {
             int processed = Integer.parseInt(input);
-            User user = this.database.getUser(processed);
+            UserInterface user = this.database.getUser(processed);
             if (user != null) {
                 return String.format("""
                         The account information is:
@@ -90,7 +99,7 @@ public class ATM implements ATMInterface {
         String input = getInput("Enter account number: ");
         try {
             int processed = Integer.parseInt(input);
-            User user = this.database.getUser(processed);
+            UserInterface user = this.database.getUser(processed);
             if (user != null) {
                 atmDisplay("""
                         Current Account Details
@@ -158,7 +167,7 @@ public class ATM implements ATMInterface {
         String input = getInput("Enter the account number to which you want to delete: ");
         try {
             int processed = Integer.parseInt(input);
-            User user = this.database.getUser(processed);
+            UserInterface user = this.database.getUser(processed);
             if (user != null) {
                 input = getInput(String.format(
                         "You wish to delete the account held by %s. If this information is correct, please re-enter the account number: ", user.getAccountName()));
@@ -312,7 +321,7 @@ public class ATM implements ATMInterface {
         LocalDate currentDate = LocalDate.now();
         try {
             int processedAmount = Integer.parseInt(amount);
-            User user = this.database.getUser(this.user_id);
+            UserInterface user = this.database.getUser(this.user_id);
             if (processedAmount < 0) {
                 return "You cannot withdraw a negative amount!";
             } else if (processedAmount > user.getAccountBalance()) {
@@ -339,7 +348,7 @@ public class ATM implements ATMInterface {
         LocalDate currentDate = LocalDate.now();
         try {
             int processedAmount = Integer.parseInt(amount);
-            User user = this.database.getUser(this.user_id);
+            UserInterface user = this.database.getUser(this.user_id);
             if (processedAmount < 0) {
                 return "You cannot deposit a negative amount!";
             } else {
@@ -360,7 +369,7 @@ public class ATM implements ATMInterface {
 
     @Override
     public String displayBalance() throws SQLException {
-        User user = this.database.getUser(this.user_id);
+        UserInterface user = this.database.getUser(this.user_id);
         LocalDate currentDate = LocalDate.now();
         return String.format("""
         \nAccount #%d
@@ -369,7 +378,7 @@ public class ATM implements ATMInterface {
         """, user.getAccountID(), currentDate.format(formatter), user.getAccountBalance());
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         System.out.println("Welcome to the ATM");
         ATM ATM = new ATM();
         ATM.start();

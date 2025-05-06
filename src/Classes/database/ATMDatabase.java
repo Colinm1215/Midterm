@@ -5,6 +5,7 @@ import Classes.domain.User;
 import Interfaces.ATMDatabaseInterface;
 import Interfaces.AccountInterface;
 import Interfaces.ConfigInterface;
+import Interfaces.UserInterface;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,11 +18,11 @@ public class ATMDatabase implements ATMDatabaseInterface {
     public ATMDatabase(ConfigInterface config) throws SQLException {
         this.config = config;
         con = DriverManager.getConnection(
-                config.getDB_URL(), config.getDB_USER(), config.getDB_PASSWORD());
+                this.config.getDB_URL(), this.config.getDB_USER(), this.config.getDB_PASSWORD());
     }
 
     @Override
-    public int addUser(User user) throws SQLException {
+    public int addUser(UserInterface user) throws SQLException {
         String query = "INSERT INTO users (login, pin, role) VALUES (?, ?, ?)";
         List<Object> params = new ArrayList<>();
         params.add(user.getLogin());
@@ -40,7 +41,7 @@ public class ATMDatabase implements ATMDatabaseInterface {
     }
 
     @Override
-    public void updateUser(User user) throws SQLException {
+    public void updateUser(UserInterface user) throws SQLException {
         String query = "UPDATE users SET login = ?, pin = ?, role = ? WHERE id = ?";
         List<Object> params = new ArrayList<>();
         params.add(user.getLogin());
@@ -72,30 +73,30 @@ public class ATMDatabase implements ATMDatabaseInterface {
         params.add(username);
         params.add(pin);
 
-        User user = dbGetUsers(query, params).getFirst();
+        UserInterface user = dbGetUsers(query, params).getFirst();
 
         return (user == null) ? -1 : user.getId();
     }
 
     @Override
     public boolean isAdmin(int id) throws SQLException {
-        User user = getUser(id);
+        UserInterface user = getUser(id);
         if (user == null) return false;
         return (user.getRole().equals("admin"));
     }
 
     @Override
-    public User getUser(int id) throws SQLException {
+    public UserInterface getUser(int id) throws SQLException {
         String query = "SELECT * FROM users WHERE id = ?";
         List<Object> params = new ArrayList<>();
         params.add(id);
-        List<User> users = dbGetUsers(query, params);
+        List<UserInterface> users = dbGetUsers(query, params);
 
         return users.isEmpty() ? null : users.getFirst();
     }
 
-    private List<User> dbGetUsers(String query, List<Object> params) throws SQLException {
-        List<User> users = new ArrayList<>();
+    private List<UserInterface> dbGetUsers(String query, List<Object> params) throws SQLException {
+        List<UserInterface> users = new ArrayList<>();
         PreparedStatement stmt = con.prepareStatement(query);
 
         for (int i = 0; i < params.size(); i++) {
@@ -127,7 +128,7 @@ public class ATMDatabase implements ATMDatabaseInterface {
         return ids;
     }
 
-    private User parseUser(ResultSet rs) throws SQLException {
+    private UserInterface parseUser(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String login = rs.getString("login");
         String pin = rs.getString("pin");
