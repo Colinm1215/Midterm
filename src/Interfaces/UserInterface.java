@@ -14,11 +14,7 @@ public interface UserInterface {
 
     void setAccountBalance(int balance);
 
-    void setAccountRole(String role);
-
     int getAccountBalance();
-
-    int getAccountRole();
 
     String getRole();
 

@@ -45,22 +45,14 @@ public class User implements UserInterface {
 
     @Override
     public void setAccountBalance(int balance) {
-        this.account.setAccountBalance(balance);
-    }
-
-    @Override
-    public void setAccountRole(String role) {
-        this.role = role;
+        if (this.account != null) {
+            this.account.setAccountBalance(balance);
+        }
     }
 
     @Override
     public int getAccountBalance() {
-        return this.account.getAccountBalance();
-    }
-
-    @Override
-    public int getAccountRole() {
-        return this.account.getAccountBalance();
+        return this.account == null ? -1 : this.account.getAccountBalance();
     }
 
     @Override
@@ -75,26 +67,30 @@ public class User implements UserInterface {
 
     @Override
     public String getAccountName() {
-        return this.account.getAccountName();
+        return this.account == null ? null : this.account.getAccountName();
     }
 
     @Override
     public void setAccountName(String accountName) {
-        this.account.setAccountName(accountName);
+        if (this.account != null) {
+            this.account.setAccountName(accountName);
+        }
     }
 
     @Override
     public String getAccountStatus() {
-        return this.account.getAccountStatus();
+        return this.account == null ? null : this.account.getAccountStatus();
     }
 
     @Override
     public void setAccountStatus(String accountStatus) {
-        this.account.setAccountStatus(accountStatus);
+        if (this.account != null) {
+            this.account.setAccountStatus(accountStatus);
+        }
     }
 
     @Override
     public int getAccountID() {
-        return this.account.getAccountId();
+        return this.account == null ? -1 : this.account.getAccountId();
     }
 }
