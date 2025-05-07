@@ -9,8 +9,12 @@ public class ATMConfig implements ConfigInterface {
     private static final String CONFIG_FILE = "config.properties";
     private static final Properties props = new Properties();
 
-    static {
-        try (InputStream input = ATMConfig.class.getClassLoader().getResourceAsStream(CONFIG_FILE)) {
+    public ATMConfig() {
+        loadProperties();
+    }
+
+    private void loadProperties() {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream(CONFIG_FILE)) {
             if (input == null) {
                 System.err.println("Unable to find " + CONFIG_FILE);
             } else {

@@ -2,6 +2,8 @@ package Classes.domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
@@ -104,5 +106,32 @@ class UserTest {
 
     @Test
     void getAccountID() {
+        Account account = new Account(1, 1000, "active", "test");
+        User user = new User(1, "testuser", "1234", "customer", account);
+        assertEquals(1, user.getAccountID());
+    }
+
+    @Test
+    void getAccountBalanceNull() {
+        User user = new User(1, "testuser", "1234", "customer", null);
+        assertEquals(-1,user.getAccountBalance());
+    }
+
+    @Test
+    void getAccountNameNull() {
+        User user = new User(1, "testuser", "1234", "customer", null);
+        assertNull(user.getAccountName());
+    }
+
+    @Test
+    void getAccountStatusNull() {
+        User user = new User(1, "testuser", "1234", "customer", null);
+        assertNull(user.getAccountStatus());
+    }
+
+    @Test
+    void getAccountIDNull() {
+        User user = new User(1, "testuser", "1234", "customer", null);
+        assertEquals(-1, user.getAccountID());
     }
 }

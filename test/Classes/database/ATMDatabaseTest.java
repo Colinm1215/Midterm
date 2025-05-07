@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -122,6 +123,12 @@ class ATMDatabaseTest {
     }
 
     @Test
+    void testATMConfig() {
+        ATMConfig config = new ATMConfig();
+        assertNotNull(config.getDB_URL());
+    }
+
+    @Test
     void isAdmin() throws SQLException {
         ATMDatabaseInterface db = new ATMDatabase(new ATMConfig());
 
@@ -131,5 +138,23 @@ class ATMDatabaseTest {
         assertEquals("admin", retrievedUser.getLogin());
         assertEquals("admin", retrievedUser.getRole());
         assertTrue(db.isAdmin(1));
+    }
+
+    @Test
+    void isAdminNull() throws SQLException {
+        ATMDatabaseInterface db = new ATMDatabase(new ATMConfig());
+
+        UserInterface retrievedUser = db.getUser(-1);
+
+        assertNull(retrievedUser);
+    }
+
+    @Test
+    void getUserNull() throws SQLException {
+        ATMDatabaseInterface db = new ATMDatabase(new ATMConfig());
+
+        UserInterface retrievedUser = db.getUser(-1);
+
+        assertNull(retrievedUser);
     }
 }

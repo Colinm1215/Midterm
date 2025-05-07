@@ -2,6 +2,7 @@ package Classes.app;
 
 import Classes.database.ATMDatabase;
 import Classes.domain.User;
+import Config.ATMConfig;
 import Interfaces.ATMDatabaseInterface;
 import Interfaces.UserInterface;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,33 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ATMTest {
+
+    @Test
+    void getInput() {
+        ATM atm = new ATM(null) {
+            @Override
+            public String getInput(String prompt) {
+                return "test input";
+            }
+        };
+        String result = atm.getInput("Enter something: ");
+        assertEquals("test input", result);
+    }
+
+    @Test
+    void testLoginMenu() throws SQLException {
+        ATMDatabaseInterface db = new ATMDatabase(new ATMConfig());
+        String[] inputs = {"admin","12345"};
+        ATM atm = new ATM(db) {
+            private int i = 0;
+            @Override public String getInput(String prompt) {
+                return inputs[i++];
+            }
+        };
+
+        assertTrue(atm.loginMenu());
+    }
+
 
     @Test
     void searchForAccount() throws SQLException {
@@ -93,7 +121,7 @@ class ATMTest {
     }
 
     @Test
-    void deleteAccount() throws SQLException {
+    void deleteAccountSuccess() throws SQLException {
         ATMDatabaseInterface mockDb = mock(ATMDatabase.class);
         UserInterface mockUser = mock(User.class);
 
@@ -111,10 +139,29 @@ class ATMTest {
         verify(mockDb).deleteAccount(123);
 
         assertEquals("Account Deleted Successfully", result);
+
+        verify(mockDb).deleteAccount(123);
     }
 
     @Test
-    void validateLogin() throws SQLException {
+    void deleteAccountFail() throws SQLException {
+        ATMDatabaseInterface mockDb = mock(ATMDatabase.class);
+
+        ATM atm = new ATM(mockDb) {
+            @Override public String getInput(String prompt) {
+                return "123";
+            }
+        };
+
+        when(mockDb.getUser(123)).thenReturn(null);
+
+        String result = atm.deleteAccount();
+
+        assertEquals("User not found!", result);
+    }
+
+    @Test
+    void validateLoginSucess() throws SQLException {
         ATMDatabaseInterface mockDb = mock(ATMDatabase.class);
         ATM atm = new ATM(mockDb);
 
@@ -124,6 +171,208 @@ class ATMTest {
         boolean result = atm.validateLogin("user", "12345");
         assertTrue(result);
         assertFalse(atm.isAdmin());
+    }
+
+    @Test
+    void validateLoginFail() throws SQLException {
+        ATMDatabaseInterface mockDb = mock(ATMDatabase.class);
+        ATM atm = new ATM(mockDb);
+
+        when(mockDb.loginUser("user", "12345")).thenReturn(-1);
+        when(mockDb.isAdmin(7)).thenReturn(false);
+
+        boolean result = atm.validateLogin("user", "12345");
+        assertFalse(result);
+    }
+
+    @Test
+    void validateLoginAdmin() throws SQLException {
+        ATMDatabaseInterface mockDb = mock(ATMDatabase.class);
+        ATM atm = new ATM(mockDb);
+
+        when(mockDb.loginUser("user", "12345")).thenReturn(7);
+        when(mockDb.isAdmin(7)).thenReturn(true);
+
+        boolean result = atm.validateLogin("user", "12345");
+        assertTrue(result);
+        assertTrue(atm.isAdmin());
+    }
+
+    @Test
+    void customerMenuWithdraw() throws SQLException {
+        ATM atm = new ATM(mock(ATMDatabaseInterface.class)) {
+            private final String[] inputs = {"1", "continue", "4"};
+            private int i = 0;
+
+            @Override public String getInput(String prompt) {
+                return inputs[i++];
+            }
+
+            @Override public String withdrawCash() {
+                return "Withdrew $100";
+            }
+        };
+
+        atm.customerMenu();
+    }
+
+    @Test
+    void customerMenuDeposit() throws SQLException {
+        ATM atm = new ATM(mock(ATMDatabaseInterface.class)) {
+            private final String[] inputs = {"2", "continue", "4"};
+            private int i = 0;
+
+            @Override public String getInput(String prompt) {
+                return inputs[i++];
+            }
+
+            @Override public String depositCash() {
+                return "Deposited $100";
+            }
+        };
+
+        atm.customerMenu();
+    }
+
+    @Test
+    void customerMenuDisplayBalance() throws SQLException {
+        ATM atm = new ATM(mock(ATMDatabaseInterface.class)) {
+            private final String[] inputs = {"3", "continue", "4"};
+            private int i = 0;
+
+            @Override public String getInput(String prompt) {
+                return inputs[i++];
+            }
+
+            @Override public String displayBalance() {
+                return "Balance: $999";
+            }
+        };
+
+        atm.customerMenu();
+    }
+
+    @Test
+    void adminMenuCreateAccount() throws SQLException {
+        ATM atm = new ATM(mock(ATMDatabaseInterface.class)) {
+            private final String[] inputs = {
+                    "1",
+                    "admin",
+                    "12345",
+                    "Test",
+                    "500",
+                    "Active",
+                    "continue",
+                    "5"
+            };
+            private int i = 0;
+
+            @Override public String getInput(String prompt) {
+                return inputs[i++];
+            }
+
+        };
+
+        atm.adminMenu();
+    }
+
+    @Test
+    void loginMenuFailsTwice() {
+        ATM atm = new ATM(mock(ATMDatabaseInterface.class)) {
+            int i = 0;
+            @Override public String getInput(String prompt) {
+                return "user";
+            }
+            @Override public boolean validateLogin(String u, String p) { return false; }
+        };
+        atm.loginMenu();
+    }
+
+    @Test
+    void startRuns() {
+        ATM atm = new ATM(mock(ATMDatabaseInterface.class)) {
+            @Override public boolean loginMenu() { return true; }
+            @Override public void customerMenu() {}
+            @Override public void end() {}
+        };
+        atm.start();
+    }
+
+    @Test
+    void adminMenuDeleteAccount() throws SQLException {
+        ATMDatabaseInterface mockDb = mock(ATMDatabaseInterface.class);
+        UserInterface mockUser = mock(UserInterface.class);
+        when(mockDb.getUser(123)).thenReturn(mockUser);
+
+        ATM atm = new ATM(mockDb) {
+            private final String[] inputs = {
+                    "2",
+                    "123",
+                    "123",
+                    "continue",
+                    "5"
+            };
+            private int i = 0;
+
+            @Override public String getInput(String prompt) {
+                return inputs[i++];
+            }
+
+        };
+
+        atm.adminMenu();
+    }
+
+    @Test
+    void adminMenuUpdateAccount() throws SQLException {
+        ATMDatabaseInterface mockDb = mock(ATMDatabaseInterface.class);
+        UserInterface mockUser = mock(UserInterface.class);
+        when(mockDb.getUser(123)).thenReturn(mockUser);
+
+
+        ATM atm = new ATM(mockDb) {
+            private final String[] inputs = {
+                    "3",
+                    "123",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "continue",
+                    "5"
+            };
+            private int i = 0;
+
+            @Override public String getInput(String prompt) {
+                return inputs[i++];
+            }
+        };
+
+        atm.adminMenu();
+    }
+
+    @Test
+    void adminMenuSearchForAccount() throws SQLException {
+        ATMDatabaseInterface mockDb = mock(ATMDatabaseInterface.class);
+        UserInterface mockUser = mock(UserInterface.class);
+        when(mockDb.getUser(123)).thenReturn(mockUser);
+
+
+        ATM atm = new ATM(mockDb) {
+            private final String[] inputs = {
+                    "4",
+                    "123",
+                    "continue",
+                    "5"
+            };
+            private int i = 0;
+
+            @Override public String getInput(String prompt) {
+                return inputs[i++];
+            }
+        };
+
+        atm.adminMenu();
     }
 
     @Test
