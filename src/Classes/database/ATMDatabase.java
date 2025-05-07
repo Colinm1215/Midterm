@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ATMDatabase implements ATMDatabaseInterface {
-    private Connection con;
-    private ConfigInterface config;
+    private final Connection con;
+    private final ConfigInterface config;
 
     public ATMDatabase(ConfigInterface config) throws SQLException {
         this.config = config;

@@ -8,7 +8,7 @@ public class User implements UserInterface {
     private String login;
     private String pin;
     private String role;
-    private AccountInterface account;
+    private final AccountInterface account;
 
     public User(int id, String login, String pin, String role, AccountInterface account) {
         this.id = id;

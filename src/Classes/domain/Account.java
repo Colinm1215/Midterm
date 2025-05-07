@@ -3,7 +3,7 @@ package Classes.domain;
 import Interfaces.AccountInterface;
 
 public class Account implements AccountInterface {
-    private int id;
+    private final int id;
     private int balance;
     private String status;
     private String name;

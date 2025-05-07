@@ -279,7 +279,7 @@ class ATMTest {
     @Test
     void loginMenuFailsTwice() {
         ATM atm = new ATM(mock(ATMDatabaseInterface.class)) {
-            int i = 0;
+            final int i = 0;
             @Override public String getInput(String prompt) {
                 return "user";
             }

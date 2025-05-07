@@ -17,7 +17,7 @@ public class ATM implements ATMInterface {
     private boolean admin = false;
     private int user_id;
     private static final Scanner scanner = new Scanner(System.in);
-    private ATMDatabaseInterface database;
+    private final ATMDatabaseInterface database;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     public ATM(ATMDatabaseInterface database) {
@@ -217,11 +217,16 @@ public class ATM implements ATMInterface {
     public void customerMenu() throws SQLException {
         boolean loop = true;
         String menu = """
-                ----------------- Customer Menu -----------------\n
-                1 - Withdraw Cash\n
-                2 - Deposit Cash\n
-                3 - Display Balance\n
-                4 - Exit\n
+                ----------------- Customer Menu -----------------
+                
+                1 - Withdraw Cash
+                
+                2 - Deposit Cash
+                
+                3 - Display Balance
+                
+                4 - Exit
+                
                 -------------------------------------------------
                 """;
         while (loop) {
@@ -254,12 +259,18 @@ public class ATM implements ATMInterface {
     public void adminMenu() throws SQLException {
         boolean loop = true;
         String menu = """
-                ------------------ Admin Menu -------------------\n
-                1 - Create Account\n
-                2 - Delete Account\n
-                3 - Update Account\n
-                4 - Search Account\n
-                5 - Exit\n
+                ------------------ Admin Menu -------------------
+                
+                1 - Create Account
+                
+                2 - Delete Account
+                
+                3 - Update Account
+                
+                4 - Search Account
+                
+                5 - Exit
+                
                 -------------------------------------------------
                 """;
         while (loop) {
